@@ -1,0 +1,43 @@
+canonical:
+  clean:
+    - air
+    - no_gas
+    - natural_air
+    - ambient
+    - fresh
+    - NoGas
+    - clean_air
+
+  benign_odour:
+    - perfume
+    - coffee
+    - tea
+    - cocoa
+    - cinnamon
+    - star_anise
+    - smoke
+    - petrol
+    - Mixture
+    - rotten
+    - food
+    - agarbatti
+    - phenyl
+    - cleaner
+    - sanitizer
+
+  narcotic_voc:      # PROXY methodology mapping
+    - ethanol
+    - acetone
+    - toluene
+    - acetaldehyde
+    - alcohol
+    - solvent
+    - camphor
+    - ipa
+
+  nitrate_trace:     # PROXY methodology mapping
+    - ammonia
+    - urea
+    - ammonium_nitrate
+    - fertilizer
+    - diesel
