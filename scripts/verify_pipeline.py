@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.features import load_spec, extract_batch, FEATURE_NAMES
 from src.drift import compensate_t_rh, plot_drift_before_after
-from src.loaders import bme688_odours, multimodal_gas, drift_uci, food_freshness, gas_array, adl_classification, breath_enose
+from src.loaders import bme688_odours, multimodal_gas, drift_uci, food_freshness, gas_array, adl, breath
 
 
 def generate_synthetic_raw_data():
@@ -179,8 +179,8 @@ def verify_pipeline():
         "UCI Drift": drift_uci.load(),
         "Food Freshness": food_freshness.load(),
         "Gas Array": gas_array.load(),
-        "ADL Classification": adl_classification.load(),
-        "Breath E-Nose": breath_enose.load(),
+        "ADL Classification": adl.load(),
+        "Breath E-Nose": breath.load(),
     }
 
     print("\n--- 1. LOADERS SUMMARY ---")

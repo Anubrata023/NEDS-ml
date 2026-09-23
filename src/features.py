@@ -149,6 +149,16 @@ def extract(scan_df, spec=None):
     n_bme = spec.get("bme688", {}).get("profile_steps", 10)
     bme_profile = scan_df.attrs.get("bme_profile")
 
+    if isinstance(bme_profile, str):
+        try:
+            bme_profile = eval(bme_profile, {"np": np, "__builtins__": {}})
+        except Exception:
+            try:
+                import json
+                bme_profile = json.loads(bme_profile)
+            except Exception:
+                bme_profile = None
+
     if bme_profile is None:
         # Fallback: check if bme profile steps are passed as channels bme_p0..bme_p9
         bme_vals = []

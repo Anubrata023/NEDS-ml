@@ -42,7 +42,7 @@ def rebaseline_rolling(v_series, window_samples=180):
     return (v_arr - rolling_r0) / np.abs(rolling_r0)
 
 
-def compensate_t_rh(X, temp, rh, is_clean_mask=None):
+def compensate_t_rh(X, temp, rh, is_clean_mask=None, coef=None, return_coef=False):
     """Temperature and Relative Humidity baseline compensation.
     
     Fits value ~ a*T + b*RH + c on clean-air scans only (or all if mask is None),
@@ -53,13 +53,15 @@ def compensate_t_rh(X, temp, rh, is_clean_mask=None):
         temp: Temperature vector of shape (N_samples,)
         rh: Relative humidity vector of shape (N_samples,)
         is_clean_mask: Boolean mask indicating clean-air scans for fitting.
+        coef: Optional pre-fitted coefficients (3 x N_features). If provided, applies transform directly.
+        return_coef: If True, returns (X_corrected, coef) tuple.
         
     Returns:
-        X_corrected: Environmentally compensated feature matrix
+        X_corrected: Environmentally compensated feature matrix (or (X_corrected, coef) if return_coef=True)
     """
-    X_mat = np.asarray(X, dtype=float)
-    temp_vec = np.asarray(temp, dtype=float)
-    rh_vec = np.asarray(rh, dtype=float)
+    X_mat = np.array(X, dtype=float, copy=True)
+    temp_vec = np.array(temp, dtype=float, copy=True)
+    rh_vec = np.array(rh, dtype=float, copy=True)
 
     # Impute NaNs in temp/rh with median
     if np.isnan(temp_vec).all():
@@ -74,6 +76,18 @@ def compensate_t_rh(X, temp, rh, is_clean_mask=None):
 
     # Build design matrix A = [T, RH, 1]
     A = np.column_stack([temp_vec, rh_vec, np.ones_like(temp_vec)])
+    X_mat_clean = np.nan_to_num(X_mat, nan=0.0)
+
+    # If pre-fitted coefficients provided, apply directly
+    if coef is not None:
+        env_trend = A[:, :2] @ coef[:2, :]
+        X_corrected = X_mat_clean - env_trend
+        return (X_corrected, coef) if return_coef else X_corrected
+
+    # If single sample or underdetermined without coef, skip fitting
+    if len(X_mat) < 3:
+        zero_coef = np.zeros((3, X_mat.shape[1]))
+        return (X_mat_clean, zero_coef) if return_coef else X_mat_clean
 
     if is_clean_mask is None or not np.any(is_clean_mask):
         is_clean_mask = np.ones(len(X_mat), dtype=bool)
@@ -83,7 +97,6 @@ def compensate_t_rh(X, temp, rh, is_clean_mask=None):
 
     # Handle NaNs in X for fitting
     X_fit_clean = np.nan_to_num(X_fit, nan=0.0)
-    X_mat_clean = np.nan_to_num(X_mat, nan=0.0)
 
     # Fit linear regression per feature
     coef, *_ = np.linalg.lstsq(A_fit, X_fit_clean, rcond=None)
@@ -92,7 +105,7 @@ def compensate_t_rh(X, temp, rh, is_clean_mask=None):
     env_trend = A[:, :2] @ coef[:2, :]
     X_corrected = X_mat_clean - env_trend
 
-    return X_corrected
+    return (X_corrected, coef) if return_coef else X_corrected
 
 
 def plot_drift_before_after(X_raw, X_corrected, batch_labels, save_path="reports/figures/drift_before_after.png"):

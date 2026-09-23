@@ -2,10 +2,30 @@
 
 All loaders return DataFrames strictly adhering to the unified long-format schema:
 Columns: ['source', 'scan_id', 't_rel', 'channel', 'value', 'label', 'temp_c', 'rh_pct', 'press_hpa', 'collection_day', 'room_id']
+
+Loaders
+-------
+  bme688_odours    — Laura Basa BME688 odour dataset
+  multimodal_gas   — JOAI multimodal gas (hard negatives)
+  drift_uci        — UCI Vergara drift dataset (16-sensor)
+  food_freshness   — Mehrab Mahdian food freshness
+  gas_array        — Husam K. Salih array of gas sensors
+  adl              — Saurabh Shahane ADL classification
+  breath           — Muhammad Rizwan breath e-nose
 """
 import os
 import yaml
 import pandas as pd
+
+from src.loaders import (  # noqa: F401  (re-export for convenience)
+    bme688_odours,
+    multimodal_gas,
+    drift_uci,
+    food_freshness,
+    gas_array,
+    adl,
+    breath,
+)
 
 UNIFIED_COLUMNS = [
     "source",

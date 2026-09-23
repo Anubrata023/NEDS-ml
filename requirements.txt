@@ -1,6 +1,15 @@
+# Core ML & data stack (training machines — Person A & B)
 numpy>=1.22.0
 pandas>=1.4.0
 pyyaml>=6.0
-scikit-learn>=1.0.0
+scikit-learn>=1.1.0
+joblib>=1.1.0
 matplotlib>=3.5.0
-seaborn>=0.11.0
+seaborn>=0.12.0
+pyarrow>=8.0.0       # Parquet read/write
+
+# Person B extras
+m2cgen>=0.10.0       # export sklearn model to pure Python for Pi
+
+# Hardware serial (Person A collection scripts, Person C Pi)
+pyserial>=3.5
