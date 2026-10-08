@@ -1,11 +1,13 @@
 channels:
   - {name: mq2,          kind: mox_analog, sign: 1,  adc_gain: 1}
   - {name: mq3,          kind: mox_analog, sign: 1,  adc_gain: 1}
-  - {name: mq135,        kind: mox_analog, sign: 1,  adc_gain: 1}
+  - {name: mq5,          kind: mox_analog, sign: 1,  adc_gain: 1}
+  - {name: mq135,        kind: mox_analog, sign: 1,  adc_gain: 1, optional: true}
   - {name: mq137,        kind: mox_analog, sign: 1,  adc_gain: 1}
   - {name: mq138,        kind: mox_analog, sign: 1,  adc_gain: 1}
   - {name: tgs2620,      kind: mox_analog, sign: 1,  adc_gain: 1, optional: true}
   - {name: mics2714_no2, kind: mox_analog, sign: -1, adc_gain: 1}   # INVERTED: resistance increases with NO2
+  - {name: mics_red,     kind: mox_analog, sign: 1,  adc_gain: 1}
   - {name: mics2714_h2,  kind: mox_analog, sign: 1,  adc_gain: 1}
 
 bme688:
@@ -13,6 +15,7 @@ bme688:
 
 ratios:
   - [mq3, mq138]
+  - [mq5, mq3]
   - [mq137, mq135]
   - [mics2714_no2, mq135]
   - [tgs2620, mq3]
